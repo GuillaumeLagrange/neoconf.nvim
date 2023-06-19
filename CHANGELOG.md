@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.3](https://github.com/folke/neoconf.nvim/compare/v1.2.2...v1.2.3) (2023-06-19)
+
+
+### Bug Fixes
+
+* **health:** remove deprecated API warnings ([#28](https://github.com/folke/neoconf.nvim/issues/28)) ([9625a17](https://github.com/folke/neoconf.nvim/commit/9625a1710a9be427a662f9ba0a383164588a41a8))
+
 ## [1.2.2](https://github.com/folke/neoconf.nvim/compare/v1.2.1...v1.2.2) (2023-06-19)
 
 
