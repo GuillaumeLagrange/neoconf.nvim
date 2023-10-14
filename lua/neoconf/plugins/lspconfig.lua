@@ -69,8 +69,29 @@ function M.on_update(fname)
 
   local clients = vim.lsp.get_active_clients()
 
+  local original_bufnr = vim.api.nvim_get_current_buf()
+  local buffname = vim.api.nvim_buf_get_name(original_bufnr)
+
   for _, client in ipairs(clients) do
     local settings_root = require("neoconf.workspace").find_root({ file = client.config.root_dir })
+
+    local workspace_folders = client.workspace_folders
+    local uv = vim.loop
+    local new_root_dir = nil
+    if workspace_folders then
+      for _, schema in ipairs(workspace_folders) do
+        local matched = true
+        local root_dir = uv.fs_realpath(schema.name)
+        if root_dir == nil or buffname:sub(1, root_dir:len()) ~= root_dir then
+          matched = false
+        end
+
+        if matched then
+          new_root_dir = schema.name
+          break
+        end
+      end
+    end
 
     -- reload this client if the global file changed, or its root dir equals the local one
     if is_global or Util.has_file(settings_root, client.config.root_dir) then
@@ -86,7 +107,7 @@ function M.on_update(fname)
         pcall(document_config.on_new_config, client.config, client.config.root_dir)
       end
       if client.config.on_new_config then
-        pcall(client.config.on_new_config, client.config, client.config.root_dir)
+        pcall(client.config.on_new_config, client.config, new_root_dir or client.config.root_dir)
       end
 
       -- only send update when confiuration actually changed
