@@ -137,10 +137,10 @@ end
 function M.get(fname, opts)
   opts = opts or {}
   fname = util.fqn(fname)
-  if not M._cache[fname] and util.exists(fname) then
-    M._cache[fname] = M.new():load(fname)
+  if util.exists(fname) then
+    return M.new():load(fname)
   end
-  return M._cache[fname]
+  -- return M._cache[fname]
 end
 
 function M.get_local(root_dir)
